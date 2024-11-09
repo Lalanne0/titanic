@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" style="scroll-behavior: smooth;">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Vincent Lalanne</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_common.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_chat.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='src/fonts/fonts.css') }}" />
+        <link rel="icon" href="{{ url_for('static', filename='images/website_logo.png') }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+
+    <body>
+        <div class="homepage-background">
+            <div class="home-circle-div">
+                <img class="parallax gradient-circle circle-1" name="4" src="{{ url_for('static', filename='images/gradient_circle.png') }}" />
+            </div>
+            <div class="home-circle-div">
+                <img class="parallax gradient-circle circle-2" name="6" src="{{ url_for('static', filename='images/gradient_circle.png') }}" />
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="prompt-selector">
+                <label for="system-prompt">Choose Claude's personality:</label>
+                <select id="system-prompt">
+                    <option value="dramatic">Extremely Dramatic Claude</option>
+                    <option value="sarcastic">Reluctant and Sarcastic Claude</option>
+                    <option value="freud">Freudian Claude</option>
+                    <option value="hostile">Hostile Claude</option>
+                    <option value="child">Child Claude</option>
+                    <option value="nometaprompt">No metaprompt Claude</option>
+                    <option value="chess">Chess Player Claude</option>
+                    <option value="friendly" selected>Friendly Claude</option>
+                </select>
+            </div>
+            <div id="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button id="send-button" aria-label="Send message"></button>
+            </div>
+        </div>
+        
+        <!-- Mobile Navbar -->
+        <div class="mobile-navbar">
+            <div class="mobile-tabs">
+                <div>
+                    <a class="tab" onclick="handleHomeClick()" href="{{ url_for('index') }}#home">Home</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleAboutMeClick()" href="{{ url_for('aboutme') }}">About me</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleProjectsClick()" href="{{ url_for('projects') }}">Projects</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleContactClick()" href="{{ url_for('index') }}#contact">Contact</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleChatClick()" href="">Chat</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleTitanicClick()" href="{{ url_for('titanic') }}">Titanic</a>
+                </div>
+                <div class="mobile-flag" onclick="handleMobileLanguageClick()"></div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-flex">
+                <div>
+                    <img class="header-image" src="{{ url_for('static', filename='images/website_logo.png') }}" onclick="window.location.href='#home';" />
+                </div>
+                <div class="tabs">
+                    <div>
+                        <a class="tab" onclick="handleHomeClick()" href="{{ url_for('index') }}#home">Home</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleAboutMeClick()" href="{{ url_for('aboutme') }}">About me</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleProjectsClick()" href="{{ url_for('projects') }}">Projects</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleContactClick()" href="{{ url_for('index') }}#contact">Contact</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleChatClick()" href="">Chat</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleTitanicClick()" href="{{ url_for('titanic') }}">Titanic</a>
+                    </div>
+                </div>
+                <div>
+                    <div class="top-right-image" onclick="handleTopRightClick()"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="language-error-message" class="error-message">
+            Sorry, only the English version is available for now!
+        </div>
+
+        <!-- Scripts -->
+        <script>
+            var currentPage = "{{ current_page }}";
+        </script>
+        <script src="{{ url_for('static', filename='src/js/animations.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/parallax.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/top_right_button.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/tabs.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/chat.js') }}"></script>
+    </body>
+</html>

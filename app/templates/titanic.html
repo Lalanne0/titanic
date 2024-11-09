@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Vincent Lalanne</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_common.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_titanic.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='src/fonts/fonts.css') }}" />
+        <link rel="icon" href="{{ url_for('static', filename='images/website_logo.png') }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+
+    <body>
+        <div class="homepage-background">
+            <div class="home-circle-div">
+                <img class="parallax gradient-circle circle-1" name="4" src="{{ url_for('static', filename='images/gradient_circle.png') }}" />
+            </div>
+            <div class="home-circle-div">
+                <img class="parallax gradient-circle circle-2" name="6" src="{{ url_for('static', filename='images/gradient_circle.png') }}" />
+            </div>
+        </div>
+
+        <div class="titanic-container">
+            <div class="titanic-content">
+                <h1>Titanic Survival Predictor</h1>
+
+                <div id="prediction-form">
+                    <h2>Enter Passenger Information</h2>
+                    <form id="passenger-form">
+                        <div class="form-group">
+                            <label for="model">Model:</label>
+                            <select id="model" name="model" required>
+                                <option value="Random Forest">Random Forest</option>
+                                <option value="SVM">SVM</option>
+                                <option value="KNN">KNN</option>
+                                <option value="XGBoost">XGBoost</option>
+                                <option value="AdaBoost">AdaBoost</option>
+                                <option value="Neural Network">Neural Network</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pclass">Passenger Class:</label>
+                            <select id="pclass" name="pclass" required>
+                                <option value="1">1st Class</option>
+                                <option value="2">2nd Class</option>
+                                <option value="3">3rd Class</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sex">Sex:</label>
+                            <select id="sex" name="sex" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="age">Age:</label>
+                            <input type="number" id="age" name="age" min="0" max="120" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sibsp">Number of Siblings/Spouses Aboard:</label>
+                            <input type="number" id="sibsp" name="sibsp" min="0" max="10" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="parch">Number of Parents/Children Aboard:</label>
+                            <input type="number" id="parch" name="parch" min="0" max="10" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fare">Fare:</label>
+                            <input type="number" id="fare" name="fare" min="0" step="0.01" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="embarked">Port of Embarkation:</label>
+                            <select id="embarked" name="embarked" required>
+                                <option value="C">Cherbourg</option>
+                                <option value="Q">Queenstown</option>
+                                <option value="S">Southampton</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-predict">Predict Survival</button>
+                    </form>
+                </div>
+
+                <div id="prediction-result" style="display: none;">
+                    <h2>Prediction Result</h2>
+                    <p id="result-message"></p>
+                </div>
+
+                <div id="model-comparison">
+                    <h2>Model Comparison</h2>
+                    <button id="compare-models" class="btn-action">Compare Models</button>
+                    <div id="comparison-plot" style="display: none;"></div>
+                </div>
+
+                <div id="shap-analysis">
+                    <h2>SHAP Analysis</h2>
+                    <button id="plot-shap" class="btn-action">Plot SHAP Values</button>
+                    <div id="shap-plot" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("passenger-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                fetch("/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const resultElement = document.getElementById("prediction-result");
+                        const messageElement = document.getElementById("result-message");
+                        messageElement.textContent = data.message;
+                        resultElement.style.display = "block";
+
+                        // Scroll to the result
+                        resultElement.scrollIntoView({ behavior: "smooth" });
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred while making the prediction. Please try again.");
+                    });
+            });
+
+            document.getElementById("compare-models").addEventListener("click", function () {
+                fetch("/compare_models")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const img = new Image();
+                        img.src = "data:image/png;base64," + data.plot_url;
+                        const plotDiv = document.getElementById("comparison-plot");
+                        plotDiv.innerHTML = "";
+                        plotDiv.appendChild(img);
+                        plotDiv.style.display = "block";
+                    });
+            });
+
+            document.getElementById("plot-shap").addEventListener("click", function () {
+                fetch("/plot_shap")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const img = new Image();
+                        img.src = "data:image/png;base64," + data.plot_url;
+                        const plotDiv = document.getElementById("shap-plot");
+                        plotDiv.innerHTML = "";
+                        plotDiv.appendChild(img);
+                        plotDiv.style.display = "block";
+                    });
+            });
+        </script>
+
+        <!-- Mobile Navbar -->
+        <div class="mobile-navbar">
+            <div class="mobile-tabs">
+                <div>
+                    <a class="tab" onclick="handleHomeClick()" href="{{ url_for('index') }}#home">Home</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleAboutMeClick()" href="{{ url_for('aboutme') }}">About me</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleProjectsClick()" href="{{ url_for('projects') }}">Projects</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleContactClick()" href="{{ url_for('index') }}#contact">Contact</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleChatClick()" href="{{ url_for('chat') }}">Chat</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleTitanicClick()" href="">Titanic</a>
+                </div>
+                <div class="mobile-flag" onclick="handleMobileLanguageClick()"></div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-flex">
+                <div>
+                    <img class="header-image" src="{{ url_for('static', filename='images/website_logo.png') }}" onclick="window.location='index.html';" />
+                </div>
+                <div class="tabs">
+                    <div>
+                        <a class="tab" onclick="handleHomeClick()" href="{{ url_for('index') }}#home">Home</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleAboutMeClick()" href="{{ url_for('aboutme') }}">About me</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleProjectsClick()" href="{{ url_for('projects') }}">Projects</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleContactClick()" href="{{ url_for('index') }}#contact">Contact</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleChatClick()" href="{{ url_for('chat') }}">Chat</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleTitanicClick()" href="">Titanic</a>
+                    </div>
+                </div>
+                <div>
+                    <div class="top-right-image" onclick="handleTopRightClick()"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="language-error-message" class="error-message">
+            Sorry, only the English version is available for now!
+        </div>
+
+        <!-- Scripts -->
+        <script>
+            var currentPage = "{{ current_page }}";
+        </script>
+        <script src="{{ url_for('static', filename='src/js/animations.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/parallax.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/top_right_button.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/tabs.js') }}"></script>
+    </body>
+</html>

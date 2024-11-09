@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Vincent Lalanne</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_common.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_projects.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='src/fonts/fonts.css') }}" />
+        <link rel="icon" href="{{ url_for('static', filename='images/website_logo.png') }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+
+    <body>
+        <!-- Homepage -->
+        <div class="homepage-background">
+            <div class="home-circle-div">
+                <img class="parallax gradient-circle circle-1" name="4" src="{{ url_for('static', filename='images/gradient_circle.png') }}" />
+            </div>
+            <div class="home-circle-div">
+                <img class="parallax gradient-circle circle-2" name="6" src="{{ url_for('static', filename='images/gradient_circle.png') }}" />
+            </div>
+            <div class="js-animation-projects-title">
+                <div class="projects-title js-hidden two-s">
+                    Projects
+                </div>
+                <div class="projects-subtitle js-hidden two-s">
+                    Learn more about my projects in this section.
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects List -->
+        <div class="white-background">
+            <div class="wide-margin-div">
+
+                <!-- Industrial project -->
+                <a href="{{ url_for('serve_article', filename='Industrial project report.pdf') }}">
+                    <div class="article-tile js-hidden">
+                        <img src="{{ url_for('static', filename='images/projects/cyber_project.jpg') }}" />
+                        <div>
+                            <span>Creating a web app to automate pentests.</span>
+                            <p>
+                                Along with seven other students, I carried out a project for a French digital services company. In this project, we used various technologies, such as Flask, HTML/CSS/JS, Bash, as well as Python scripts to create a seamless interface allowing users to launch a simple network attack without coding knowledge.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Prototype project -->
+                <a href="{{ url_for('serve_article', filename='Prototyping project report.pdf') }}">
+                    <div class="article-tile js-hidden">
+                        <img src="{{ url_for('static', filename='images/projects/proto_project.png') }}" />
+                        <div>
+                            <span>Designing a capacitive load cell.</span>
+                            <p>
+                                I thought about how to make lifts safer, and designed a sensor to achieve this. I used pure electronics, assembly, beam mechanics, as well as 3D modelling and prototyping to conduct my experiments.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Manual tree project -->
+                <a href="{{ url_for('serve_article', filename='Manual tree perf comparison.pdf') }}">
+                    <div class="article-tile js-hidden">
+                        <img src="{{ url_for('static', filename='images/projects/gini_tree.png') }}" />
+                        <div>
+                            <span>Creating a manual decision tree classifier.</span>
+                            <p>
+                                I manually implemented a decision tree to classify edible and poisonous species of mushrooms based on their characteristics. I then compared the performances of the tree based on the splitting criterion used to create it (Gini impurity or entropy).
+                            </p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Scikit project -->
+                <a href="{{ url_for('serve_article', filename='Machine learning report.pdf') }}">
+                    <div class="article-tile js-hidden">
+                        <img src="{{ url_for('static', filename='images/projects/scikit_project.png') }}" />
+                        <div>
+                            <span>Discovering AI with Scikit-learn.</span>
+                            <p>
+                                I took my first steps in AI using the MNIST dataset. I explored different possibilities for optimising learning and then developed a neural network to compare the results.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Mobile Navbar -->
+        <div class="mobile-navbar">
+            <div class="mobile-tabs">
+                <div>
+                    <a class="tab" onclick="handleHomeClick()" href="{{ url_for('index') }}#home">Home</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleAboutMeClick()" href="{{ url_for('aboutme') }}">About me</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleProjectsClick()" href="">Projects</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleContactClick()" href="{{ url_for('index') }}#contact">Contact</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleChatClick()" href="{{ url_for('chat') }}">Chat</a>
+                </div>
+                <div>
+                    <a class="tab" onclick="handleTitanicClick()" href="{{ url_for('titanic') }}">Titanic</a>
+                </div>
+                <div class="mobile-flag" onclick="handleMobileLanguageClick()"></div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-flex">
+                <div>
+                    <img class="header-image" src="{{ url_for('static', filename='images/website_logo.png') }}" onclick="window.location='index.html';" />
+                </div>
+                <div class="tabs">
+                    <div>
+                        <a class="tab" onclick="handleHomeClick()" href="{{ url_for('index') }}#home">Home</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleAboutMeClick()" href="{{ url_for('aboutme') }}">About me</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleProjectsClick()" href="">Projects</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleContactClick()" href="{{ url_for('index') }}#contact">Contact</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleChatClick()" href="{{ url_for('chat') }}">Chat</a>
+                    </div>
+                    <div>
+                        <a class="tab" onclick="handleTitanicClick()" href="{{ url_for('titanic') }}">Titanic</a>
+                    </div>
+                </div>
+                <div>
+                    <div class="top-right-image" onclick="handleTopRightClick()"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="language-error-message" class="error-message">
+            Sorry, only the English version is available for now!
+        </div>
+
+        <!-- Scripts -->
+        <script>
+            var currentPage = "{{ current_page }}";
+        </script>
+        <script src="{{ url_for('static', filename='src/js/animations.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/parallax.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/top_right_button.js') }}"></script>
+        <script src="{{ url_for('static', filename='src/js/tabs.js') }}"></script>
+    </body>
+</html>
