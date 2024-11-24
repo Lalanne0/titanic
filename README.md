@@ -1,7 +1,5 @@
 # Titanic Dataset Model Comparison
 
-Welcome to a quick comparison of popular models on the famous Titanic dataset!
-
 ---
 
 ## Dataset
@@ -73,3 +71,7 @@ Download the dataset directly from [Kaggle](https://www.kaggle.com/c/titanic) an
    - Removed columns: 'PassengerId', 'Name', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Deck', 'Has_Cabin', 'IsAlone'
    - Numerical imputer: mean strategy
    - Categories encoding: OneHot
+
+---
+
+Feel free to run the code and see what model performs best!
