@@ -4,14 +4,6 @@ Welcome to a quick comparison of popular models on the famous Titanic dataset!
 
 ---
 
-## Table of Contents
-- [Dataset](#dataset)
-- [Installation](#installation)
-- [Features](#features)
-- [Preprocessing](#preprocessing)
-
----
-
 ## Dataset
 
 The dataset used in this project is the Titanic dataset, available on [Kaggle](https://www.kaggle.com/competitions/titanic). It includes the following key features:
@@ -28,79 +20,56 @@ The dataset used in this project is the Titanic dataset, available on [Kaggle](h
 - **Cabin**: Cabin number (if available).
 - **Embarked**: Port of embarkation (C = Cherbourg, Q = Queenstown, S = Southampton).
 
-Download the dataset directly from [Kaggle](https://www.kaggle.com/c/titanic) and place it in the `data/` directory of this repository.
+Download the dataset directly from [Kaggle](https://www.kaggle.com/c/titanic) and place it in a `data/` directory in this repository.
 
 ---
 
-## Installation
+## Preprocessing
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/titanic-dataset-analysis.git
-   cd titanic-dataset-analysis
-   ```
+### PassengerId and Ticket
 
-2. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+**PassengerId** are dropped as they are not relevant to the study.
 
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Cabin
 
----
+1. **Preprocess Cabin Information**:
+   - Extract the first character from the `Cabin` column to create a new column `Deck`.
+   - Generate additional features:
+     - `Has_Cabin`: Binary indicator showing whether the cabin information is available.
+     - `Deck_category`: Group decks into categories:
+       - `'ABC'`: Upper decks
+       - `'DE'`: Middle decks
+       - `'FG'`: Lower decks
+       - `'Other'`: Special cases
+   - If `Pclass` and `Fare` are available:
+     - Calculate the ratio of the fare paid to the average fare for the passenger class (`Fare_ratio`).
+     - Estimate missing `Deck_category` values based on class and fare ratio.
 
-## Usage
+### Name
 
-### Data Analysis and Preprocessing
-Navigate to the `notebooks/` directory to explore Jupyter notebooks for data cleaning and EDA:
-```bash
-jupyter notebook notebooks/
-```
+   - Extract titles from the `Name` column using regex.
+   - Standardize and group rare titles under the category `Rare`.
+   - Harmonize similar titles (e.g., `Mlle` → `Miss`, `Mme` → `Mrs`).
 
-### Train and Test Models
-Use the `scripts/` directory for training models. For example:
-```bash
-python scripts/train_model.py
-```
+### Age
 
-### Visualizations
-Generate visualizations to understand the data and model performance:
-```bash
-python scripts/visualize_data.py
-```
+   - Fill missing `Age` values by computing the median age for each combination of `Title` and `Pclass`.
+   - If no matching median exists, fallback to median age by `Title` or the overall median age.
 
----
+### SibSp and Parch
 
-## Features
-- **Data Preprocessing**: Handle missing values, feature engineering, and scaling.
-- **Exploratory Data Analysis (EDA)**: Gain insights into passenger demographics and survival patterns.
-- **Machine Learning Models**: Predict survival using models like Logistic Regression, Random Forests, and more.
-- **Visualization Tools**: Create charts and graphs for better understanding of the data.
+   - Create new features:
+     - `FamilySize`: Total family members (sum of `SibSp` and `Parch`, plus one for the passenger).
+     - `IsAlone`: Binary feature indicating whether the passenger is traveling alone.
+     - `FarePerPerson`: Average fare per family member.
 
----
+### Embarked
 
-## Contributing
+   - Fill missing `Embarked` values with the mode (`'S'` in this case).
 
-We welcome contributions to this project! To contribute:
-1. Fork the repository.
-2. Create a new branch for your feature or bugfix:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes and push to your fork.
-4. Submit a pull request with a description of your changes.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this project as per the terms of the license.
-
----
-
-Happy coding!
-
+### General Preprocessing Pipeline
+   - Remove duplicate rows
+   - Sequentially apply all preprocessing functions
+   - Removed columns: 'PassengerId', 'Name', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', 'Deck', 'Has_Cabin', 'IsAlone'
+   - Numerical imputer: mean strategy
+   - Categories encoding: OneHot
